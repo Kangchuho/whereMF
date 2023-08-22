@@ -1,0 +1,297 @@
+==================
+## part1
+==================
+ 
+npm install @react-navigation/native react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view @react-navigation/stack @react-navigation/drawer
+
+npm install react-native-reanimated
+npm install react-native-linear-gradient --save
+npm install --save @ptomasroos/react-native-multi-slider
+
+//이번은 별무리없이 설치완료!!
+
+react-native.config.js
+
+module.exports = {
+    project: {
+        ios: {},
+        android: {}
+    },
+    assets: ["./assets/fonts/"]
+};
+
+환경아래 폰트파일 넣어두고, 아래 리소스 연결실행!!
+> npx react-native-asset
+info Linking ttf assets to iOS project 
+info Linking ttf assets to Android project 
+
+
+pod install --> 요것도 아주 잘되네!! 뭐지이거..??? 
+
+프로젝트 생성 오류가 계속나면 그른데... 너 느리다. 그리고 뭔가.. 입력오류가 날정도로
+메모리 및 IO 부하가 있는것 같으어..  그냥 수동으로 초기화 하자구~
+
+npx react-native-clean-project
+npm install
+
+// import * as default from react-native-reanimated ^^^^ 요기서 에러나면... 
+// babel.config.js 아래 항목을 추가하고서리.. 
+module.exports = {
+  presets: ['module:metro-react-native-babel-preset'],
+  plugins: ['react-native-reanimated/plugin'],
+};
+// 번들러를 다시 시작하고 서리.. npm run ios 해준다..
+// npm start -- --reset-cache
+
+//react-native-reanimated 요거 아주 요물이네.. 자주 말썽 부림!! 
+
+//전역환경 변수... redux (앱종료후 상태 증발) ... -> realm 으로 변경해도.. 문제없을듯... (앱 종료후에도 상태값이 DB에 남음!!)
+//redux 설치
+npm install react-redux
+npm install redux
+npm i redux-thunk
+
+//redux toolket 설치 (슬라이서를 이용해서.. 어쩌구.. )
+npm i @reduxjs/toolkit
+
+//typescript가 실행되도록 합니다. (이거 안하니.. 자동완성이 안됨..ㅜ)
+npm install typescript @types/react @types/react-native --save-dev
+
+
+//npm i react-native-swipe-list-view --save
+//npm i react-native-linear-gradient --save
+//npm i react-native-keyboard-aware-scroll-view --save
+//npm install react-native-maps --legacy-peer-deps
+
+
+// podfile 수정
+>> platform :ios, '12.0'
+  # React Native Maps dependencies
+>> rn_maps_path = '../node_modules/react-native-maps'
+>> pod 'react-native-google-maps', :path => rn_maps_path
+// 강제로 추가한 경우.
+>> pod 'GoogleMaps'
+
+// npm i react-native-maps-directions --legacy-peer-deps
+
+
+==================
+## part2
+==================
+
+https://www.byprogrammers.com/2021/08/lcrn-ep16-food-delivery-app-part-2/
+
+npm i react-native-splash-screen --save
+npm i react-native-keyboard-aware-scroll-view --save
+npm install --save @twotalltotems/react-native-otp-input@1.3.5
+
+** 전화번호등 디바이스 정보 가져오기 : 디바이스 권한 필요!! (IOS는 사용불가!!!)
+npm i react-native-device-info
+https://github.com/react-native-device-info/react-native-device-info
+
+** 전화번호 정보?? >> 요것도 ios는 안됨 reddo@c.com
+npm i react-native-sms-retriever
+https://github.com/Bruno-Furtado/react-native-sms-retriever
+
+이슈!! sms -> otp input...
+textContentType="oneTimeCode"에 를 붙여야 keyboardType="numeric"합니다 TextInput. onChangeText코드를 처리해야 하는 경우 TextInput 에 소품도 추가하십시오.
+
+-- IOS oneTimeCode input Text 붙여넣기 가능하려면!!
+>> @twotalltotems/react-native-otp-input@1.3.5 >> 요것도 잘 붙여넣기 됩니다.
+
+* 문자양식1 - 한글 (인증번호 단어 필수)
+[Web발신]
+[전자영수증]본인확인 인증번호는 1234입니다.
+[Web발신]
+[전자영수증]본인확인 인증번호는 123456입니다.
+
+-- 네이버에서 온 SMS메시지!! -> IOS에서 잘 받아줍니다. 
+[Web발신]
+[전자영수증]인증번호 [1234]를 입력해 주세요.
+
+
+* 문자양식2 - 영문 (code, passcode 단어 필수)
+[Web발신]
+Your e-Receipt OPT code is 1234.
+[Web발신]
+Your e-Receipt OPT code is 123456.
+
+
+
+
+
+==================
+## part3
+==================
+
+//시작화면
+npm i react-native-splash-screen --save
+    https://github.com/crazycodeboy/react-native-splash-screen
+
+ios > app_name_dir > images.xcassets > AppDelegate.mm 
+    #import "RNSplashScreen.h" 추가
+    UIView *rootView = RCTApp... 영역에 아래 항목 추가
+    [RNSplashScreen show];
+
+
+ xcode ios > app_name_dir > app_name.workspace 수정하기
+    1) app_name_dir > Images + 이미지셋 추가
+    2) LunchScreen > View 영역 하단의 레이블 삭제
+        이미지뷰 추가후 이미지셋 지정, 상하좌우룰 변경 모두 0, 
+        콘테이너 모드 Aspect Fill 지정
+    3) 빌드하기 
+    4) App.js에서 시작화면 안보이게 코드 추가
+
+> npm i react-native-swipe-list-view --save
+//npm i react-native-linear-gradient --save
+//npm i react-native-keyboard-aware-scroll-view --save
+
+-- 지도 API 1차 시도 -> 구글맵, 2차 시도 -> 네이버맵(시도해볼것!!)
+> npm install react-native-maps --legacy-peer-deps
+-- 지도거리 및 도착시간 API (국내에서는 동작하지 않는듯함, 미국은 계산이 잘됨!!)
+> npm i react-native-maps-directions --legacy-peer-deps
+
+reddok@gmal.com
+
+-- 초기화해서 다시 실행~~
+> npm start -- --reset-cache
+> npx react-native start --reset-cache
+
+
+*********************************************************
+** Redux로 상태관리 되는 부분을 -> Realm localdb로 변경합니다.  **
+*********************************************************
+
+> npm i realm
+dummyData.js >> models로 재정의 >> model, controller -> 콘트롤러만 스키마 정의???
+
+* 리스너를 를 통한 후처리
+Realm.addListener() Object.addListener() Collection.addListener()
+
+// query realm for all instances of the "Task" type.
+const tasks = realm.objects("Task");
+ ... 리스너 정의
+  function listener(tasks, changes) {
+    // Update UI in response to deleted objects
+    changes.deletions.forEach((index) => {
+        // Deleted objects cannot be accessed directly,
+        // but we can update a UI list, etc. knowing the index.
+        console.log(`A task was deleted at the ${index} index`);
+    });
+    // Update UI in response to inserted objects
+    changes.insertions.forEach((index) => {
+        let insertedTasks = tasks[index];
+        console.log(
+        `insertedTasks: ${JSON.stringify(insertedTasks, null, 2)}`
+        );
+        // ...
+    });
+    // Update UI in response to modified objects
+    // `newModifications` contains object indexes from after they were modified
+    changes.newModifications.forEach((index) => {
+        let modifiedTask = tasks[index];
+        console.log(`modifiedTask: ${JSON.stringify(modifiedTask, null, 2)}`);
+        // ...
+    });
+  }
+// Observe collection notifications.
+tasks.addListener(listener);
+
+// Remember to close the realm
+realm.close();
+
+** 스키마 관계설정
+const myScheme = {
+  name: "myScheme",
+  primaryKey: "_id",
+  properties: {
+   _id: "objectId",
+   _partition: "string",
+   name: "string",
+   tasks: "myData[]"  <<< 기존 mongoDB 스키마 설정과 유사!!
+ }
+};
+
+const myData = {
+  name: "myData",
+  primaryKey: "_id",
+  properties: {
+    _id: "objectId",
+    _partition: "string",
+    firstname: "string",
+    lastname: "string",
+ }
+
+ static schema = {
+    name: 'Task',
+    primaryKey: '_id',
+    properties: {
+      _id: 'objectId',
+      description: 'string',
+      isComplete: {type: 'bool', default: false},  << 오브젝트 명시
+      createdAt: 'date',
+    },
+  };
+
+** 스키마 정의 및 값 반영시 처리
+-- typescript 정의 <=> 값 반영 <=> Realm 스키마 정의
+-------------------------------------------------------
+-- Realm.BSON.ObjectId <=> new Realm.BSON.ObjectId() <=> 'objectId' , 
+-- string <=> string value <=> 'string' , 
+-- boolean <=> false, true <=> {type: 'bool', default: false} , 
+-- Date <=> new Date() <=> 'date', 
+
+* 타입정의 및 기본값 null 가능문자 ? 사용가능
+* { "type": "int?", "default": 0 },
+
+** RealmProvider 방식을 사용하면 Hook을 쓸수있다. useRealm, useQuery, useObject
+
+
+** 이미지를 base64로 저장!!
+
+npm i react-native-image-base64
+
+--- google Maps
+
+> npm install react-native-maps
+> npm install react-native-maps-directions
+
+-- google map 셋팅이 좀 다르다.. (지난번은 간단했거등..)
+
+1) pod 파일에  아래 두개 추가
+pod 'GoogleMaps'
+pod 'Google-Maps-iOS-Utils', '~> 3.4.2'
+
+2) xcode 프로젝트에서 ./node_modules/react-native-map/AirMaps 폴더를 추가
+3) mm 파일에 #import <GoogleMaps/GoogleMaps.h> 추가
+4) mm 파일에 [GMSServices provideAPIKey:@"AIzaSyBxZ_wq6GLJ9ck1N2GN-Xr01biTtjdugAw"]; 추가
+5) xcode project root > Build Settings > filter에서 Preprocessing 검색
+  Apple Clang - Preprocessing > Preprocessor Macros > Debug, Release 항목에
+  HAVE_GOOGLE_MAP=1 항목 각각 추가 -> 빌드한번 해주고, 
+
+6) npm run ios 하면 기본은 애플맵, 프로바이더 google 로 바꾸면 구글맵이 뜬다네요..
+아래 경로 참조!!
+https://cuneyt.aliustaoglu.biz/en/using-google-maps-as-provider-in-ios-with-react-native/
+
+
+-- 부평역
+37.491118 126.723031
+-- 갈산역 주변
+37.517233 126.725077
+
+
+
+
+**** 네이버 클라우드 맵 서비스 ****
+
+reddokk@gmail.com
+내방##4567
+
+네이버 모바일 맵 - 번들정보!!
+
+Application 이름 : naver-map-svc-202208
+Client ID (X-NCP-APIGW-API-KEY-ID) : cjluvdx8av
+Client Secret (X-NCP-APIGW-API-KEY) : 1gsbDGwM2QsDycVvCDGy39XcH09pQIeUoEqjBPyC
+
+Android 앱 패키지 이름 : com.where_is_myfood
+iOS Bundle ID : org.reactjs.native.example.where-is-myfood
